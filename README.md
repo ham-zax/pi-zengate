@@ -28,7 +28,7 @@ pi install npm:pi-zengate-models
 From git, or from a local checkout:
 
 ```bash
-pi install git:github.com/<owner>/pi-zengate@v1.0.0
+pi install git:github.com/ham-zax/pi-zengate@v1.0.1
 pi install /path/to/pi-zengate
 ```
 
