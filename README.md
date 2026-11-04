@@ -56,6 +56,31 @@ or in `<agent-dir>/zengate.json`, which avoids environment variables:
 The environment wins over the file. Without a URL the extension registers no
 provider and shows one warning per session.
 
+## Setup helpers
+
+The fastest manual way is a text editor. On Windows:
+
+```powershell
+notepad "$env:USERPROFILE\.pi\agent\zengate.json"
+```
+
+Paste the two fields, save, restart Pi. On Linux, macOS or WSL create
+`~/.pi/agent/zengate.json` the same way.
+
+Two scripts ask for the URL and the key and then write the file, so neither
+script contains a secret:
+
+```powershell
+iex (irm "<raw URL of scripts/setup.ps1>")          # Windows
+```
+
+```bash
+curl -fsSL "<raw URL of scripts/setup.sh>" | bash    # Linux, macOS, WSL
+```
+
+Both scripts write the file with mode `0600` and print the model count. A
+`models.json` that holds only `opencode2api` moves to `models.json.disabled`.
+
 ## Verify
 
 ```bash

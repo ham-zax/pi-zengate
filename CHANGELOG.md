@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+- Add `scripts/setup.ps1` and `scripts/setup.sh`. They ask for the gateway URL
+  and key, write `<agent-dir>/zengate.json` without a BOM, and move a stale
+  `models.json` that holds only the static provider.
+- Document the text-editor route for a machine without an agent.
+
 ## [1.0.1] - 2026-11-04
 
 - Remove the built-in gateway URL. Every machine sets `OPENCODE2API_BASE_URL`
