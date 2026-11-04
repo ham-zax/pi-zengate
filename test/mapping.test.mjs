@@ -176,6 +176,37 @@ test("settings come from the environment first", () => {
   }
 });
 
+test("settings fall back to the provider the sync wrote into models.json", () => {
+  const dir = mkdtempSync(join(tmpdir(), "zengate-"));
+  writeFileSync(
+    join(dir, "models.json"),
+    JSON.stringify({
+      providers: { opencode2api: { baseUrl: "https://synced.example/v1/", apiKey: "synced-key" } },
+    }),
+  );
+  const previous = { ...process.env };
+  try {
+    process.env.PI_CODING_AGENT_DIR = dir;
+    delete process.env.OPENCODE2API_API_KEY;
+    delete process.env.OPENCODE2API_BASE_URL;
+
+    const fromModels = readSettings();
+    assert.equal(fromModels.baseUrl, "https://synced.example/v1");
+    assert.equal(fromModels.apiKey, "synced-key");
+    assert.equal(fromModels.keySource, "models.json");
+
+    writeFileSync(
+      join(dir, "zengate.json"),
+      JSON.stringify({ baseUrl: "https://file.example/v1", apiKey: "file-key" }),
+    );
+    const fromFile = readSettings();
+    assert.equal(fromFile.baseUrl, "https://file.example/v1");
+    assert.equal(fromFile.keySource, "zengate.json");
+  } finally {
+    process.env = previous;
+  }
+});
+
 test("no endpoint is baked in", () => {
   const dir = mkdtempSync(join(tmpdir(), "zengate-"));
   const previous = { ...process.env };

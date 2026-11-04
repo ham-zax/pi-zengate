@@ -147,6 +147,10 @@ export function configPath(): string {
   return join(agentDir(), "zengate.json");
 }
 
+export function modelsConfigPath(): string {
+  return join(agentDir(), "models.json");
+}
+
 export function cachePath(): string {
   return join(agentDir(), "cache", "zengate-models.json");
 }
@@ -165,25 +169,49 @@ function normalizeBaseUrl(value: string): string {
 }
 
 /**
- * Settings precedence: environment, then <agent-dir>/zengate.json.
- * The config file lets a machine skip environment variables. This package ships
- * no endpoint: every machine supplies its own.
+ * A machine prepared by the gateway sync already holds the endpoint and the key
+ * in models.json. Read them so the client needs no second copy of either.
+ */
+function gatewayFromModelsConfig(): { baseUrl?: string; apiKey?: string } {
+  const file = readJson(modelsConfigPath()) ?? {};
+  const providers = file.providers;
+  const provider =
+    providers && typeof providers === "object"
+      ? (providers as Record<string, unknown>)[PROVIDER_ID]
+      : undefined;
+  if (!provider || typeof provider !== "object") return {};
+  const record = provider as Record<string, unknown>;
+  const baseUrl =
+    typeof record.baseUrl === "string" && record.baseUrl.trim() ? record.baseUrl : undefined;
+  const apiKey =
+    typeof record.apiKey === "string" && record.apiKey.trim() ? record.apiKey.trim() : undefined;
+  return { baseUrl, apiKey };
+}
+
+/**
+ * Settings precedence: environment, then <agent-dir>/zengate.json, then the
+ * `opencode2api` provider in <agent-dir>/models.json. The last source means a
+ * machine the gateway sync already prepared needs no extra file. This package
+ * ships no endpoint: every machine supplies its own.
  */
 export function readSettings(): { baseUrl?: string; apiKey?: string; keySource: string } {
   const file = readJson(configPath()) ?? {};
   const fileBase = typeof file.baseUrl === "string" && file.baseUrl.trim() ? file.baseUrl : undefined;
   const fileKey = typeof file.apiKey === "string" && file.apiKey.trim() ? file.apiKey.trim() : undefined;
+  const synced = gatewayFromModelsConfig();
   const envBase = process.env[BASE_URL_ENV];
   const envKey = process.env[KEY_ENV]?.trim();
-  const base = envBase || fileBase;
+  const base = envBase || fileBase || synced.baseUrl;
   return {
     baseUrl: base ? normalizeBaseUrl(base) : undefined,
-    apiKey: envKey || fileKey,
-    keySource: envKey ? KEY_ENV : fileKey ? "zengate.json" : "none",
+    apiKey: envKey || fileKey || synced.apiKey,
+    keySource: envKey ? KEY_ENV : fileKey ? "zengate.json" : synced.apiKey ? "models.json" : "none",
   };
 }
 
-const configureHint = (): string => `Set ${BASE_URL_ENV} or baseUrl in ${configPath()} to your gateway /v1 URL.`;
+const configureHint = (): string =>
+  `No gateway endpoint found. Set ${BASE_URL_ENV}, baseUrl in ${configPath()}, ` +
+  `or providers.${PROVIDER_ID}.baseUrl in ${modelsConfigPath()}.`;
 
 export default async function (pi: ExtensionAPI) {
   const settings = readSettings();

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.2] - 2026-11-04
+
+- Read `baseUrl` and `apiKey` from the `opencode2api` provider in
+  `<agent-dir>/models.json` when the environment and `zengate.json` are empty.
+  A machine the gateway sync already prepared needs no second copy, and the
+  session warning stops for those machines.
+- Name all three sources in that warning.
+- Pin the install lines to `1.0.2`.
+
 ## [Unreleased]
 
 - Add `scripts/setup.ps1` and `scripts/setup.sh`. They ask for the gateway URL

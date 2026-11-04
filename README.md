@@ -22,13 +22,13 @@ This package ships no endpoint and no key. Each machine supplies both.
 ## Install
 
 ```bash
-pi install npm:pi-zengate-models@1.0.1
+pi install npm:pi-zengate-models@1.0.2
 ```
 
 From git, or from a local checkout:
 
 ```bash
-pi install git:github.com/ham-zax/pi-zengate@v1.0.1
+pi install git:github.com/ham-zax/pi-zengate@v1.0.2
 pi install /path/to/pi-zengate
 ```
 
@@ -56,8 +56,10 @@ or in `<agent-dir>/zengate.json`, which avoids environment variables:
 ```
 
 `<agent-dir>` is `~/.pi/agent` by default, or `PI_CODING_AGENT_DIR` when set.
-The environment wins over the file. Without a URL the extension registers no
-provider and shows one warning per session.
+The extension also reads `providers.opencode2api.baseUrl` and `.apiKey` from
+`<agent-dir>/models.json`, so a machine the gateway sync prepared needs no second
+copy. Precedence is environment, then `zengate.json`, then `models.json`. Without
+any URL the extension registers no provider and warns once per session.
 
 ## Setup helpers
 
