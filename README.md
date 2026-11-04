@@ -22,7 +22,7 @@ This package ships no endpoint and no key. Each machine supplies both.
 ## Install
 
 ```bash
-pi install npm:pi-zengate-models
+pi install npm:pi-zengate-models@1.0.1
 ```
 
 From git, or from a local checkout:
@@ -31,6 +31,9 @@ From git, or from a local checkout:
 pi install git:github.com/ham-zax/pi-zengate@v1.0.1
 pi install /path/to/pi-zengate
 ```
+
+Pin the npm version. An older `0.0.0-stage` publish still holds the `latest` tag
+until it is removed, and that version has no extension.
 
 ## Configure
 
