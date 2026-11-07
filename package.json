@@ -1,6 +1,6 @@
 {
   "name": "pi-zengate-models",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Pi provider extension that discovers free models and their metadata from an OpenAI-compatible gateway catalog, with a local cache and no scheduler.",
   "keywords": [
     "pi-package",
