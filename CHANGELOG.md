@@ -7,10 +7,10 @@
   A machine the gateway sync already prepared needs no second copy, and the
   session warning stops for those machines.
 - Name all three sources in that warning.
-- Pin the install lines to `1.0.2`.
 
 ## [Unreleased]
 
+- Install without a version tag, so `pi update --extensions` follows releases.
 - Add `scripts/setup.ps1` and `scripts/setup.sh`. They ask for the gateway URL
   and key, write `<agent-dir>/zengate.json` without a BOM, and move a stale
   `models.json` that holds only the static provider.

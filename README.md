@@ -22,18 +22,19 @@ This package ships no endpoint and no key. Each machine supplies both.
 ## Install
 
 ```bash
-pi install npm:pi-zengate-models@1.0.2
+pi install npm:pi-zengate-models
 ```
 
 From git, or from a local checkout:
 
 ```bash
-pi install git:github.com/ham-zax/pi-zengate@v1.0.2
+pi install git:github.com/ham-zax/pi-zengate
 pi install /path/to/pi-zengate
 ```
 
-Pin the npm version. An older `0.0.0-stage` publish still holds the `latest` tag
-until it is removed, and that version has no extension.
+Install without a tag. A tag in the install command, such as `@v1.0.2`, freezes
+that machine on one version, and `pi update --extensions` then re-fetches the same
+tag forever. Without a tag, updates follow the newest release.
 
 ## Configure
 
